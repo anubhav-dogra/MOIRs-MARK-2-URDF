@@ -26,11 +26,13 @@ Examples of the modular compositions as written below can also be found in the `
 ### Files Required in order for URDF visualization:
 
  1. `moir_mark2_urdf_ros/config/module_config.yaml`
- 2. `moir_mark2_urdf_ros/urdf/modular_robot_alt.urdf.xacro`
+ 2. `moir_mark2_urdf_ros/urdf/modular_robot.urdf.xacro`
  3. `moir_mark2_urdf_ros/urdf/material.xacro`
  4. `moir_mark2_urdf_ros/meshes` (folder containing meshes for the modules for visualizing)
  4. `moir_mark2_urdf_ros/scripts/ElementTree_pretty.py`
- 5. `moir_mark2_urdf_ros/scripts/modular_robot_yaml_alt.py`
+ 5. `moir_mark2_urdf_ros/scripts/moir_modular_composition_generator.py`
+ 6. `moir_mark2_urdf_ros/scripts/moir_modular_generator_DH.py`
+The generated files will be saved in `moir_mark2_urdf_ros/urdf/generated/`
 
 ### Using DH parameters
 - Write DH parameters in module_config.yaml
@@ -38,18 +40,23 @@ Examples of the modular compositions as written below can also be found in the `
 robot_name: mod<n>r_name  
 offset_length: < in meters>    
 dh_config:
- - /alpha /a /d /theta /H or L   
- ```
+- /alpha /a /d /theta /H or L  
+```
+#### Note: The DH table order is as follows.
+   | Twist angle | Link length | Offset | Joint angle | Module Variant |
+   | ----------- | ----------- | ------ | ----------- | -------------- |
+  
+ 
  * `n` is the number of DoF of the configuration. Example: mod6r_standard or mod2r_planar
  * Use `/alpha` in radians, for 90: 1.56
  * Robot base is formed, just as a stand. Height of the stand is decided by the offset length.
  
  - Navigate to the directory: `moir_mark2_urdf_ros/scripts`
- - `python modular_robot_yaml_alt_type4.py`
+ - `python moir_modular_generator_DH.py`
  - Navigate to the main workspace.
 ```bash
 source devel/setup.bash
-cd /your_ws/src/moir_mark2_urdf_ros/urdf
+cd /your_ws/src/moir_mark2_urdf_ros/urdf/generated
 roslaunch urdf_tutorial display.launch model:=mod<n>r_name.xacro
 ```
 taa daa...
