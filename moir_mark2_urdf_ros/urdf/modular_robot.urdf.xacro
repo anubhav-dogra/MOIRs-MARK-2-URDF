@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<robot name="macros" xmlns:xacro="http://ros.org/wiki/xacro">
+	<xacro:include filename="$(find moir_mark2_urdf_ros)/urdf/material.xacro" />
+	
+	<!-- MACRO for Pedestal -->
+	<xacro:macro name="pedestal" params="length xyz child rpy">
+		<link name="world"/>
+	
+		<!-- Pedestal Link -->
+		<link name="base_link">
+			<visual>
+				<geometry>
+					<cylinder length="0.1" radius="0.2"/>
+				</geometry>
+				<material name="silver">
+					<color rgba="0.75 0.75 0.75 1"/>
+				</material>
+				<!-- origin z half of the length -->
+				<origin rpy="0 0 0" xyz="0 0 0.05"/>
+			</visual>
+			<!-- Similar to Visual -->
+			<collision>
+				<geometry>
+					<cylinder length="0.1" radius="0.2"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0.05"/>
+			</collision>
+			<inertial>
+				<mass value="1.0"/>
+				<origin rpy="0 0 0" xyz="0 0 0.025"/>
+				<inertia ixx="0.0108" iyy="0.0108" izz="0.02" ixy="0" ixz="0" iyz="0"/>
+			</inertial>
+		</link>
+		
+		<!-- Fixed joint -->
+		<joint name="fixed_1" type="fixed">
+			<parent link="world"/>
+			<child link="base_link"/>
+		</joint>
+		
+		<link name="link_0">
+			<visual>
+				<geometry>
+					<cylinder length="${length}" radius="0.025"/>
+				</geometry>
+				<material name="white" />
+				<origin rpy="0 0 0" xyz="${xyz}"/>
+			</visual>
+			<!-- Similar to Visual -->
+			<collision>
+				<geometry>
+					<cylinder length="${length}" radius="0.025"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="${xyz}"/>
+			</collision>
+			<inertial>
+				<!-- Assume Linear Density of 0.1 -->
+				<mass value="${0.1 * length}"/>
+				<origin rpy="0 0 0" xyz="${xyz}"/>
+				<inertia ixx="${0.0333 * length * length * length}" iyy="${0.0333 * length * length * length}" izz="0.0" ixy="0" ixz="0" iyz="0"/>
+			</inertial>
+		</link>
+		
+		<joint name="fixed_2" type="fixed">
+			<parent link="base_link"/>
+			<child link="link_0"/>
+			<origin xyz="0 0 0.1" rpy="0 0 0"/>
+		</joint>
+		<joint name="fixed_3" type="fixed">
+			<parent link="link_0"/>
+			<child link="${child}"/>
+			<origin xyz="0 0 ${length}" rpy="${rpy}"/>
+		</joint>
+	</xacro:macro>
+	
+	
+	<!-- MACRO for Module Link -->
+	<xacro:macro name="heavy-module" params="name xyz_module rpy_module xyz_motor rpy_motor xyz_joint rpy_joint">
+		<!-- Module -->
+		<link name="${name}">
+    		<inertial>
+      			<origin xyz="-0.020832 0 -0.01338" rpy="0 0 0" />
+      			<mass value="0.26551"/>
+      			<!-- This inertia is only for M1 module -->
+      			<!-- Need to make it variable for M2 module -->
+      			<inertia ixx="0.00063611" ixy="-1.3039E-07" ixz="6.0056E-05" iyy="0.00051541" iyz="-8.4349E-08" izz="0.00077605" />
+    		</inertial>
+    		<visual>
+    			<!-- A default value of pi about z, it just reverses the inertia values about x and y -->
+      			<origin xyz="${xyz_module}" rpy="${rpy_module}"/>
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/twist_unit.STL" />
+      			</geometry>
+      			<material name="golden" />
+    		</visual>
+    		<collision>
+      			<origin xyz="${xyz_module}" rpy="${rpy_module}" />
+      				<geometry>
+        				<mesh filename="package://moir_mark2_urdf_ros/meshes/twist_unit.STL" />
+      				</geometry>
+    		</collision>
+  		</link>
+  		
+  		<!-- Module Motor -->
+  		<link name="${name}_link">
+    		<inertial>
+      			<origin xyz="3.9399E-06 0.00048422 0.0054114" rpy="0 0 0" />
+      			<mass value="0.35501" />
+      			<inertia ixx="0.0002858" ixy="3.6859E-09" ixz="2.8312E-07" iyy="0.00028282" iyz="-3.7064E-08" izz="0.00033469" />
+    		</inertial>
+    		<visual>
+      			<origin xyz="${xyz_motor}" rpy="${rpy_motor}" />
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/casings.STL" />
+      			</geometry>
+      			<material name="blue" />
+    		</visual>
+    		<collision>
+      			<origin xyz="${xyz_motor}" rpy="${rpy_motor}" />
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/casings.STL" />
+      			</geometry>
+    		</collision>
+  		</link>
+  		
+  		<!-- Limit is -1.54 to 0.75 -->
+  		<joint name="${name}_link_joint" type="fixed">
+    		<origin xyz="${xyz_joint}" rpy="${rpy_joint}" />
+    		<parent link="${name}" />
+    		<child link="${name}_link" />
+    		<!--
+    		<axis xyz="0 -1 0" />
+    		<limit lower="-1.54" upper="0.75" effort="0" velocity="0" />
+    		-->
+  		</joint>
+	</xacro:macro>
+	
+	<xacro:macro name="light-module" params="name xyz_module rpy_module xyz_motor rpy_motor xyz_joint rpy_joint">
+		<!-- Module -->
+		<link name="${name}">
+    		<inertial>
+      			<origin xyz="-0.020832 2.3575E-05 -0.013385" rpy="0 0 0" />
+      			<mass value="0.26551"/>
+      			<!-- This inertia is only for M1 module -->
+      			<!-- Need to make it variable for M2 module -->
+      			<inertia ixx="0.00063611" ixy="-1.3039E-07" ixz="6.0056E-05" iyy="0.00051541" iyz="-8.4349E-08" izz="0.00077605" />
+    		</inertial>
+    		<visual>
+    			<!-- A default value of pi about z, it just reverses the inertia values about x and y -->
+      			<origin xyz="${xyz_module}" rpy="${rpy_module}"/>
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/twist_unit.STL" />
+      			</geometry>
+      			<material name="red" />
+    		</visual>
+    		<collision>
+      			<origin xyz="${xyz_module}" rpy="${rpy_module}" />
+      				<geometry>
+        				<mesh filename="package://moir_mark2_urdf_ros/meshes/twist_unit.STL" />
+      				</geometry>
+    		</collision>
+  		</link>
+  		
+  		<!-- Module Motor -->
+  		<link name="${name}_link">
+    		<inertial>
+      			<origin xyz="3.9399E-06 0.00048422 0.0054114" rpy="0 0 0" />
+      			<mass value="0.47605" />
+      			<inertia ixx="0.00027014" ixy="3.6859E-09" ixz="2.8312E-07" iyy="0.00026456" iyz="-3.7064E-08" izz="0.0002545" />
+    		</inertial>
+    		<visual>
+      			<origin xyz="${xyz_motor}" rpy="${rpy_motor}" />
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/casings.STL" />
+      			</geometry>
+      			<material name="green" />
+    		</visual>
+    		<collision>
+      			<origin xyz="${xyz_motor}" rpy="${rpy_motor}" />
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/casings.STL" />
+      			</geometry>
+    		</collision>
+  		</link>
+  		
+  		<!-- Limit is -1.54 to 0.75 -->
+  		<joint name="${name}_link_joint" type="fixed">
+    		<origin xyz="${xyz_joint}" rpy="${rpy_joint}" />
+    		<parent link="${name}" />
+    		<child link="${name}_link" />
+    		<!--
+    		<axis xyz="0 -1 0" />
+    		<limit lower="-1.54" upper="0.75" effort="0" velocity="0" />
+    		-->
+  		</joint>
+	</xacro:macro>
+	
+	<!-- MACRO for Curved Link -->
+	<xacro:macro name="curved" params="name xyz rpy">
+  		<link name="${name}">
+    		<inertial>
+      			<origin xyz="0.059692 -0.00077289 -0.031782" rpy="0 0 0" />
+      			<mass value="0.070959" />
+      			<inertia ixx="0.00014889" ixy="0" ixz="0" iyy="0.00026116" iyz="0" izz="0.00019073" />
+    		</inertial>
+    		<visual>
+      			<origin xyz="${xyz}" rpy="${rpy}" />
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/curved_link.STL" />
+      			</geometry>
+      			<material name="white" />
+    		</visual>
+    		<collision>
+				<origin xyz="${xyz}" rpy="${rpy}" />
+      			<geometry>
+        			<mesh filename="package://moir_mark2_urdf_ros/meshes/curved_link.STL" />
+      			</geometry>
+    		</collision>
+  		</link>
+	</xacro:macro>
+	
+	<!-- MACRO for Link Length -->
+	<xacro:macro name="pipe" params="name xyz rpy">
+		<link name="${name}">
+			<inertial>
+		  		<origin xyz="-0.12242 -1.7347E-17 0" rpy="0 0 0" />
+		  		<mass value="0.10873" />
+		  		<inertia ixx="3.8522E-05" ixy="-1.7097E-19" ixz="1.1329E-20" iyy="0.00081357" iyz="-1.5654E-22" izz="0.00082396" />
+			</inertial>
+			<visual>
+		  		<origin xyz="${xyz}" rpy="${rpy}" />
+		  		<geometry>
+					<mesh filename="package://moir_mark2_urdf_ros/meshes/link_straight.STL" />
+		  		</geometry>
+		  		<material name="white" />
+			</visual>
+			<collision>
+		  		<origin xyz="${xyz}" rpy="${rpy}" />
+		  		<geometry>
+					<mesh filename="package://moir_mark2_urdf_ros/meshes/link_straight.STL" />
+		  		</geometry>
+			</collision>
+	  	</link>
+	</xacro:macro>
+	
+	<!-- MACRO for Block -->
+	<xacro:macro name="block" params="name">
+		<link name="${name}">
+			<inertial>
+				<origin xyz="0 0 0" rpy="0 0 0" />
+				<mass value="0.001" />
+				<inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
+			</inertial>
+			<visual>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<geometry>
+					<box size="0.025 0.025 0.025"/>
+				</geometry>
+				<material name="white"/>
+			</visual>
+			<collision>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<geometry>
+					<box size="0.025 0.025 0.025"/>
+				</geometry>
+			</collision>
+		</link>
+	</xacro:macro>
+		
+	<!-- MACRO for Fixed Joint -->
+	<xacro:macro name="fixed" params="name parent child xyz rpy">
+		<!-- Fixed Joint -->
+		<joint name="${name}" type="fixed">
+			<parent link="${parent}"/>
+			<child link="${child}"/>
+			<origin rpy="${rpy}" xyz="${xyz}"/>
+		</joint>
+	</xacro:macro>
+	
+	<!-- MACRO for Module Joint -->
+	<xacro:macro name="module_joint" params="name parent child axis xyz rpy">
+		<!-- Rotatory Joint -->
+		<joint name="${name}" type="continuous">
+			<axis xyz="${axis}"/>
+			<parent link="${parent}"/>
+			<child link="${child}"/>
+			<origin rpy="${rpy}" xyz="${xyz}"/>
+			<limit effort="1000.0" velocity="0.5"/>
+		</joint>
+	</xacro:macro>
+	
+	<!-- MACRO for transmission tags -->
+	<xacro:macro name="transmission_tag" params="trans_name joint_name act_name">
+		<transmission name="${trans_name}">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="${joint_name}">
+				<hardwareInterface>PositionJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="${act_name}">
+				<hardwareInterface>PositionJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+	</xacro:macro>
+</robot>

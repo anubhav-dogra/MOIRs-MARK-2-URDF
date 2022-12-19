@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>moir_mark2_urdf_ros</name>
+  <version>1.0.0</version>
+  <description>The moir-mark-urdf-ros package</description>
+  <maintainer email="anubhav.dogra@hotmail.com">Anubhav Dogra</maintainer>
+  <maintainer email="sakshum19@gmail.com">Sakshay Mahna</maintainer>
+  <license>GPL-3.0</license>
+  <url type="website">http://github.com/anubhav-dogra/MOIRs-MARK-2-URDF</url>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <exec_depend>rospy</exec_depend>
+</package>

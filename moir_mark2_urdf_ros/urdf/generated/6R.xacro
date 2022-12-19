@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<robot name="6R" xmlns:xacro="http://ros.org/wiki/xacro">
+	<xacro:include filename="$(find moir_mark2_urdf_ros)/urdf/modular_robot.urdf.xacro"/>
+	<xacro:pedestal child="module_1" length="0.0" rpy="0 0 0" xyz="0 0 0.0"/>
+	<xacro:heavy-module name="module_1" rpy_joint="0 0 0" rpy_module="0 0 0" rpy_motor="0 0 0" xyz_joint="0 0 0.07474" xyz_module="0 0 0.045" xyz_motor="0 0 0"/>
+	<xacro:module_joint axis="0 0 1" child="module_2" name="joint_1" parent="module_1_link" rpy="0 0 0" xyz="0 0 0.073"/>
+	<xacro:transmission_tag act_name="motor_1" joint_name="joint_1" trans_name="transmission_1"/>
+	<xacro:heavy-module name="module_2" rpy_joint="0 -1.57 0" rpy_module="0 -1.57 0" rpy_motor="0 0 0" xyz_joint="-0.02974 0 0.075" xyz_module="0 0 0.075" xyz_motor="0 0 0"/>
+	<xacro:module_joint axis="0 0 1" child="link_1" name="joint_2" parent="module_2_link" rpy="0 0 0" xyz="0 0 0.073"/>
+	<xacro:transmission_tag act_name="motor_2" joint_name="joint_2" trans_name="transmission_2"/>
+	<xacro:pipe name="link_1" rpy="0 0 0" xyz="0 0 0"/>
+	<xacro:fixed child="module_3" name="fixed_joint_2" parent="link_1" rpy="3.14 0 0" xyz="0.22 0 -0.015"/>
+	<xacro:heavy-module name="module_3" rpy_joint="0 0 0" rpy_module="0 0 0" rpy_motor="0 0 0" xyz_joint="0.075 0 0.02974" xyz_module="0.075 0 0" xyz_motor="0 0 0"/>
+	<xacro:module_joint axis="0 0 1" child="link_2" name="joint_3" parent="module_3_link" rpy="0 0 0" xyz="0 0 0.073"/>
+	<xacro:transmission_tag act_name="motor_3" joint_name="joint_3" trans_name="transmission_3"/>
+	<xacro:pipe name="link_2" rpy="0 0 0" xyz="0 0 0"/>
+	<xacro:fixed child="module_4" name="fixed_joint_3" parent="link_2" rpy="3.14 0 0" xyz="0.22 0 -0.015"/>
+	<xacro:light-module name="module_4" rpy_joint="0 0 0" rpy_module="0 0 0" rpy_motor="0 0 0" xyz_joint="0.075 0 0.02974" xyz_module="0.075 0 0" xyz_motor="0 0 0"/>
+	<xacro:module_joint axis="0 0 1" child="module_5" name="joint_4" parent="module_4_link" rpy="0 0 0" xyz="0 0 0.073"/>
+	<xacro:transmission_tag act_name="motor_4" joint_name="joint_4" trans_name="transmission_4"/>
+	<xacro:light-module name="module_5" rpy_joint="0 -1.57 0" rpy_module="0 -1.57 0" rpy_motor="0 0 0" xyz_joint="-0.02974 0 0.075" xyz_module="0 0 0.075" xyz_motor="0 0 0"/>
+	<xacro:module_joint axis="0 0 1" child="link_3" name="joint_5" parent="module_5_link" rpy="0 0 0" xyz="0 0 0.073"/>
+	<xacro:transmission_tag act_name="motor_5" joint_name="joint_5" trans_name="transmission_5"/>
+	<xacro:curved name="link_3" rpy="0 0 0" xyz="0.0065 0 0"/>
+	<xacro:fixed child="module_6" name="fixed_joint_5" parent="link_3" rpy="0 0 0" xyz="0.115 0 -0.105"/>
+	<xacro:light-module name="module_6" rpy_joint="0 1.57 0" rpy_module="0 1.57 0" rpy_motor="0 0 0" xyz_joint="0.07474 0 0" xyz_module="0.045 0 0" xyz_motor="0 0 0"/>
+	<xacro:module_joint axis="0 0 1" child="module_7" name="joint_6" parent="module_6_link" rpy="0 0 0" xyz="0 0 0.073"/>
+	<xacro:transmission_tag act_name="motor_6" joint_name="joint_6" trans_name="transmission_6"/>
+	<xacro:block name="module_7"/>
+	<gazebo>
+		<plugin filename="libgazebo_ros_control.so" name="control"/>
+		<plugin filename="libgazebo_ros_joint_state_publisher.so" name="joint_state_publisher">
+			<jointName>joint_1, joint_2, joint_3, joint_4, joint_5, joint_6</jointName>
+		</plugin>
+	</gazebo>
+</robot>
