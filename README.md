@@ -1,6 +1,8 @@
 # MOIRs-MARK-2-URDF
 This package provides the tools to generate the customized manipulator configurations (`n'-DoF), even with non-parallel and non-parallel jointed configurations, using the unconventional modular library. 
 
+This package is supported for Melodic branch, as the scripts are based upon python2, this can be used in different version with minute changes in the script from python2 to python3.
+
 If you are using this work in any form, Please cite this article:
 
 ```
