@@ -558,7 +558,7 @@ class RobotURDF():
 			_file.write(prettify(self.robot))
 	
 		# Print to terminal for debugging purposes
-		print prettify(self.robot)
+		print(prettify(self.robot))
 		
 		
 # Call all the parameters

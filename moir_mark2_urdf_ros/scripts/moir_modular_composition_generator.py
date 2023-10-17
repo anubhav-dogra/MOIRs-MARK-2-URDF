@@ -11,16 +11,16 @@ class RobotURDF():
 		# Implement the side-opposite algorithm
 		self.opp = 0		# self.opp == 0 implies construction along Z and self.opp == 1 implies construction along X
 		self.robot = Element('robot')		# Make the first URDF Element
-		self.name = raw_input("Enter the name of the robot: ")		# Name of the robot
+		self.name = input("Enter the name of the robot: ")		# Name of the robot
 		self.robot.set('name', str(self.name))				# Set it in the urdf file
 		self.robot.set('xmlns:xacro', "http://ros.org/wiki/xacro")
 		
-		self.type = raw_input("Enter the type configuration: ")		# Set the Type Configuration
+		self.type = input("Enter the type configuration: ")		# Set the Type Configuration
 		
 		include = SubElement(self.robot, 'xacro:include')
 		include.set('filename', '$(find moir_mark2_urdf_ros)/urdf/modular_robot.urdf.xacro')	# Specify the MACRO File
 		
-		offset_length = float(raw_input("Enter the initial offset length: "))		# Specify the initial length
+		offset_length = float(input("Enter the initial offset length: "))		# Specify the initial length
 		
 		self.pedestal = SubElement(self.robot, "xacro:pedestal")		# Add the pedestal
 		# Set the parameters of pedestal
@@ -322,13 +322,13 @@ class RobotURDF():
 		# buffer format: [command, link_type, module_name, link_name, joint_name, child_name, trans_name, act_name, twist, z_twist, mass]
 		# if command is heavy then mass is 2, otherwise for any other input default mass of 1 will be taken, for now this works fine!
 		
-		number_of_modules = raw_input("Enter the number of modules required: ")
+		number_of_modules = input("Enter the number of modules required: ")
 		number_of_modules = int(number_of_modules)
 		
 		while(number_of_modules != 0):
 			if(int(self.type) == 1):
 				# The configuration type is 1. This implies that there is no twist to be provided. Hence we will only take 4 inputs from the user
-				command = raw_input('Enter module configuration: ').split(' ')
+				command = input('Enter module configuration: ').split(' ')
 				heavy = int(command[0][0] == "h")
 				module = int(command[0][1])
 				
@@ -344,7 +344,7 @@ class RobotURDF():
 					
 			elif(int(self.type) == 2):
 				# The configuration type is 2. This implies that there is a twist in Z axis. We take 5 inputs from the user
-				command = raw_input('Enter module configuration: ').split(' ')
+				command = input('Enter module configuration: ').split(' ')
 				heavy = int(command[0][0] == "h")
 				module = int(command[0][1])
 				z_twist = float(command[1])
@@ -363,7 +363,7 @@ class RobotURDF():
 				
 			elif(int(self.type) == 3):
 				# The configuration type is 3. This implies that there is twist in Y axis. We take 5 inputs from the user
-				command = raw_input('Enter module configuration: ').split(' ')
+				command = input('Enter module configuration: ').split(' ')
 				heavy = int(command[0][0] == "h")
 				module = int(command[0][1])
 				twist = float(command[1])
@@ -380,7 +380,7 @@ class RobotURDF():
 
 			elif(int(self.type) == 4):
 				# The configuration type is 4. This implies that there is a twist in Z axis and Y axis. We take 6 inputs from the user
-				command = raw_input('Enter module configuration: ').split(' ')
+				command = input('Enter module configuration: ').split(' ')
 				heavy = int(command[0][0] == "h")
 				module = int(command[0][1])
 				z_twist = float(command[1])
@@ -458,7 +458,7 @@ class RobotURDF():
 			_file.write(prettify(self.robot))
 	
 		# Print to terminal for debugging purposes
-		print prettify(self.robot)
+		print(prettify(self.robot))
 		
 		
 # Call all the parameters
